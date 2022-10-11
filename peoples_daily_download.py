@@ -16,7 +16,6 @@ def creat_folder_if_not_exist(folder):
 
 
 def check_newspaper_exist(paper_save_folder, paper_pdf_filename, newspaper_cover_url):
-
     creat_folder_if_not_exist(paper_save_folder)
 
     filelist = os.listdir(paper_save_folder)
@@ -36,7 +35,6 @@ def check_newspaper_exist(paper_save_folder, paper_pdf_filename, newspaper_cover
 
 
 def download_newspaper(newspaper_cover_url, newspaper_download_url_format, temp_folder):
-
     creat_folder_if_not_exist(temp_folder)
 
     print("下载中……")
@@ -58,7 +56,6 @@ def download_newspaper(newspaper_cover_url, newspaper_download_url_format, temp_
 
 
 def download_file(file_url, save_folder):
-
     file_name = os.path.basename(file_url)
     response = requests.get(file_url, headers=headers)
     file = response.content
@@ -79,7 +76,7 @@ def get_file_list(file_path):
         return dir_list
 
 
-def merge_pdf(source_folder,  filename, aimed_folder):
+def merge_pdf(source_folder, filename, aimed_folder):
     source_file_list = get_file_list(source_folder)
 
     pdf_file_merger = PyPDF2.PdfFileMerger(strict=False)
@@ -99,8 +96,10 @@ if __name__ == '__main__':
     newspaper_saver_folder = './newspaper'  # 报纸保存位置，没有就自动创建
 
     # newspaper config
-    filename_prefix ="People's.Daily."
+    newspaper_name = "人民日报"
+    filename_prefix = "PeoplesDaily_"
     newspaper_cover_url_format = "http://paper.people.com.cn/rmrb/html/{}/nbs.D110000renmrb_01.htm"
+    newspaper_download_url_format = "http://paper.people.com.cn/rmrb/images/{0}/{2}/rmrb{1}{2}.pdf"
 
     # 解析输入参数
     parser = argparse.ArgumentParser(description='Manual to this script')
@@ -111,10 +110,10 @@ if __name__ == '__main__':
     # 日期
     date = args.date
 
-    path_format_date = date[0:4]+"-"+date[4:6]+"/"+date[6:8]
+    path_format_date = date[0:4] + "-" + date[4:6] + "/" + date[6:8]
     newspaper_cover_url = newspaper_cover_url_format.format(path_format_date)
     newspaper_pdf_filename = filename_prefix + date + ".pdf"
-    newspaper_download_url_format = "http://paper.people.com.cn/rmrb/images/{0}/{2}/rmrb{1}{2}.pdf"
+
 
     print("人民日报下载")
 
