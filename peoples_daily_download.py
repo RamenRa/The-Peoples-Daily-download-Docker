@@ -42,8 +42,11 @@ def download_newspaper(newspaper_cover_url, newspaper_download_url_format, temp_
 
     # 获取报纸页数
     response = requests.get(newspaper_cover_url, headers=headers)
-    page_count = len(re.findall("nbs", response.text))
 
+    # 打印 页面内容
+    # print(response.text)
+
+    page_count = len(re.findall("nbs", response.text))
     print("本期总共{}版".format(str(page_count)))
     print("开始分片下载:")
     for page in range(1, page_count + 1):
@@ -76,15 +79,18 @@ def get_file_list(file_path):
         return dir_list
 
 
-def merge_pdf(source_folder, filename, aimed_folder):
+def merge_pdf(source_folder, filename, target_folder):
     source_file_list = get_file_list(source_folder)
 
     pdf_file_merger = PyPDF2.PdfFileMerger(strict=False)
 
     for file in source_file_list:
-        pdf_file_merger.append(source_folder + '/' + file)
+        file_path = source_folder + '/' + file
+        pdf_file_merger.append(file_path)
+        # pdf_file_merger.append(PdfFileReader(open(file_path, 'rb')))
 
-    pdf_file_merger.write(aimed_folder + "/" + filename)
+    target_file_path = target_folder + "/" + filename
+    pdf_file_merger.write(target_file_path)
     pdf_file_merger.close()
 
 
@@ -114,8 +120,7 @@ if __name__ == '__main__':
     newspaper_cover_url = newspaper_cover_url_format.format(path_format_date)
     newspaper_pdf_filename = filename_prefix + date + ".pdf"
 
-
-    print("人民日报下载")
+    print(newspaper_name)
 
     # 日期 格式: 20220901
     print("日期:" + date)
