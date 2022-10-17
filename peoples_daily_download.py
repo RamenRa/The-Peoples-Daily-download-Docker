@@ -1,47 +1,19 @@
 # encoding = UTF-8
 import os
 import re
-import shutil
-import datetime
 import requests
-import argparse
 
-import PyPDF2
-
-
-def creat_folder_if_not_exist(folder):
-    # if folder not exist, create folder
-    if not os.path.exists(folder):
-        os.makedirs(folder)
-
-
-def check_newspaper_exist(paper_save_folder, paper_pdf_filename, newspaper_cover_url):
-    creat_folder_if_not_exist(paper_save_folder)
-
-    filelist = os.listdir(paper_save_folder)
-
-    if paper_pdf_filename in filelist:
-        print("该日期已经下载过了!")
-        exit(0)
-
-    # check web newspaper exist
-    response = requests.get(newspaper_cover_url, headers=headers)
-    if response.status_code == 403:
-        print("您选择的日期太久远，网站不提供")
-        exit(0)
-    if response.status_code == 404:
-        print("未找到指定日期的报纸，请尝试其他日期")
-        exit(0)
+import newspaper_helper as helper
 
 
 def download_newspaper(newspaper_cover_url, newspaper_download_url_format, temp_folder):
-    creat_folder_if_not_exist(temp_folder)
+    helper.creat_folder_if_not_exist(temp_folder)
 
     print("下载中……")
     print(newspaper_cover_url)
 
     # 获取报纸页数
-    response = requests.get(newspaper_cover_url, headers=headers)
+    response = requests.get(newspaper_cover_url, headers=helper.headers)
 
     # 打印 页面内容
     # print(response.text)
@@ -53,53 +25,12 @@ def download_newspaper(newspaper_cover_url, newspaper_download_url_format, temp_
         format_page = f"%02d" % page
         file_url = newspaper_download_url_format.format(path_format_date, date, format_page)
         print("第" + str(page) + "版 download url: " + file_url)
-        download_file(file_url, temp_folder)
+        helper.download_file(file_url, temp_folder)
 
     print("分片下载结束")
 
 
-def download_file(file_url, save_folder):
-    file_name = os.path.basename(file_url)
-    response = requests.get(file_url, headers=headers)
-    file = response.content
-    with open(save_folder + "/" + file_name, "wb") as fn:
-        fn.write(file)
-
-
-def get_file_list(file_path):
-    dir_list = os.listdir(file_path)
-    if not dir_list:
-        return
-    else:
-        # 注意，这里使用lambda表达式，将文件按照最后修改时间顺序升序排列
-        # os.path.getmtime() 函数是获取文件最后修改时间
-        # os.path.getctime() 函数是获取文件最后创建时间
-        dir_list = sorted(dir_list, key=lambda x: os.path.getmtime(os.path.join(file_path, x)))
-        # print(dir_list)
-        return dir_list
-
-
-def merge_pdf(source_folder, filename, target_folder):
-    source_file_list = get_file_list(source_folder)
-
-    pdf_file_merger = PyPDF2.PdfFileMerger(strict=False)
-
-    for file in source_file_list:
-        file_path = source_folder + '/' + file
-        pdf_file_merger.append(file_path)
-        # pdf_file_merger.append(PdfFileReader(open(file_path, 'rb')))
-
-    target_file_path = target_folder + "/" + filename
-    pdf_file_merger.write(target_file_path)
-    pdf_file_merger.close()
-
-
 if __name__ == '__main__':
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36"
-    }
-    temp_folder = "./part"  # 临时文件夹，存每一页的文件，每次运行会自动创建和删除
-    newspaper_saver_folder = './newspaper'  # 报纸保存位置，没有就自动创建
 
     # newspaper config
     newspaper_name = "人民日报"
@@ -107,14 +38,14 @@ if __name__ == '__main__':
     newspaper_cover_url_format = "http://paper.people.com.cn/rmrb/html/{}/nbs.D110000renmrb_01.htm"
     newspaper_download_url_format = "http://paper.people.com.cn/rmrb/images/{0}/{2}/rmrb{1}{2}.pdf"
 
-    # 解析输入参数
-    parser = argparse.ArgumentParser(description='Manual to this script')
-    today = datetime.date.today().strftime("%Y%m%d")
-    parser.add_argument("--date", type=str, default=today, help='input date,format: 20220901')
-    args = parser.parse_args()
+    # 获取输入参数
+    input_args = helper.get_input_arg()
 
     # 日期
-    date = args.date
+    date = input_args.date
+
+    # 获取周报本周的出版日
+    date = helper.get_this_monday() if (date is None or "none" == date) else helper.get_monday(date)
 
     path_format_date = date[0:4] + "-" + date[4:6] + "/" + date[6:8]
     newspaper_cover_url = newspaper_cover_url_format.format(path_format_date)
@@ -126,21 +57,21 @@ if __name__ == '__main__':
     print("日期:" + date)
 
     # 检测目标文件是否存在
-    check_newspaper_exist(newspaper_saver_folder, newspaper_pdf_filename, newspaper_cover_url)
-
-    # 清空临时文件缓存
-    if os.path.exists(temp_folder):
-        print('清空临时文件')
-        shutil.rmtree(temp_folder)
-        # 重建缓存目录
-        os.makedirs(temp_folder)
+    helper.check_newspaper_exist(helper.newspaper_saver_folder, newspaper_cover_url, newspaper_pdf_filename)
 
     # 分片下载
-    download_newspaper(newspaper_cover_url, newspaper_download_url_format, temp_folder)
+    download_newspaper(newspaper_cover_url, newspaper_download_url_format, helper.temp_folder)
+
+    # 获取排序后的分片文件名list
+    filename_list = sorted(os.listdir(helper.temp_folder),
+                           key=lambda x: os.path.getmtime(os.path.join(helper.temp_folder, x)))
+    print("本期总共{}版".format(str(len(filename_list))))
 
     # 合并为整个pdf
-    print('合并为单个PDF文件:' + newspaper_pdf_filename)
-    merge_pdf(temp_folder, newspaper_pdf_filename, newspaper_saver_folder)
+    helper.merge_pdf(helper.temp_folder, filename_list, newspaper_pdf_filename, helper.newspaper_saver_folder)
 
     # 删除临时文件夹
-    shutil.rmtree(temp_folder)
+    helper.clear_dir(helper.temp_folder)
+
+    print("获取完成: " + newspaper_pdf_filename)
+    print("\n")
