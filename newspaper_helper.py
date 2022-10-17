@@ -6,6 +6,7 @@ import calendar
 import shutil
 import urllib
 
+import pytz
 import requests
 
 import PyPDF2
@@ -13,6 +14,8 @@ import PyPDF2
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36"
 }
+
+timezone = pytz.timezone('Asia/Shanghai')
 
 temp_folder = "./part"  # 临时文件夹，存每一页的文件，每次运行会自动创建和删除
 newspaper_saver_folder = './newspaper'  # 报纸保存位置，没有就自动创建
@@ -26,10 +29,10 @@ def get_input_arg():
 
 
 def get_today_date():
-    return datetime.date.today().strftime("%Y%m%d")
+    return datetime.datetime.now(timezone).strftime("%Y%m%d")
 
 
-def get_monday(date_str):
+def get_monday_date(date_str):
     current_day = datetime.datetime.strptime(date_str, '%Y%m%d')
     oneday = datetime.timedelta(days=1)
 
@@ -39,8 +42,8 @@ def get_monday(date_str):
     return current_day.strftime('%Y%m%d')
 
 
-def get_this_monday():
-    current_day = datetime.date.today()
+def get_this_monday_date():
+    current_day = datetime.datetime.now(timezone).date()
     oneday = datetime.timedelta(days=1)
     while current_day.weekday() != calendar.MONDAY:
         current_day -= oneday

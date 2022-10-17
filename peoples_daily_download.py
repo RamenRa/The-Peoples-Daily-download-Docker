@@ -45,7 +45,7 @@ if __name__ == '__main__':
     date = input_args.date
 
     # 获取周报本周的出版日
-    date = helper.get_this_monday() if (date is None or "none" == date) else helper.get_monday(date)
+    date = helper.get_today_date() if (date is None or "none" == date) else date
 
     path_format_date = date[0:4] + "-" + date[4:6] + "/" + date[6:8]
     newspaper_cover_url = newspaper_cover_url_format.format(path_format_date)
