@@ -23,10 +23,16 @@
 #### 类Unix系统
 类unix系统安装方式如下：
 
-- 安装PyPDF2
+- 安装PyPDF2 用于合并PDF文件
 
 ```shell
 pip3 install PyPDF2
+```
+
+- 安装pytz module 用于获取时区
+- 
+```shell
+sudo pip3 install pytz
 ```
 
 如果未安装pip3则需要先安装pip3
