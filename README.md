@@ -14,6 +14,7 @@
 git clone https://github.com/RamenRa/The-Peoples-Daily-download-Docker.git && cd The-Peoples-Daily-download-Docker/
 ```
 现在你可以使用vi或者nano文本编辑器编辑crontab。用于自定义下载时间，默认07：30。官网04：00更新
+
 构建镜像
 ```
 docker build -t peoples_daily_download .
