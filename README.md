@@ -29,7 +29,7 @@ docker run -d --name peoples_daily_download -v [宿主机要保存PDF的路径]:
 需要下载指定日期的人民日报，需要在脚本命令后面加上--date 参数，以下载指定日期的人民日报参数格式为yyyyMMdd，月日小于10时，需要前方0补位。
 例如下载2022年9月1日的人民日报，执行如下命令：
 ```shell
-python3 peoples_daily_download.py --date 20220901
+docker exec peoples_daily_download python /app/peoples_daily_download.py --date 20220901
 ```
 
 --------------------------
