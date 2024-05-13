@@ -1,0 +1,1 @@
+30 07 * * * root /usr/local/bin/python /app/peoples_daily_download.py >> /var/log/cron.log 2>&1
