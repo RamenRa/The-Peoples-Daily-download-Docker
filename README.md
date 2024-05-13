@@ -10,6 +10,7 @@
 ### 需要Docker环境，能正常拉取github文件和docker镜像
 
 拉取文件
+=群晖系统没有git命令，请手动下载zip自行解压或安装git=
 ```
 git clone https://github.com/RamenRa/The-Peoples-Daily-download-Docker.git && cd The-Peoples-Daily-download-Docker/
 ```
