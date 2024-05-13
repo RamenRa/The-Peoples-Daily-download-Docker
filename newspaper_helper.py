@@ -9,6 +9,13 @@ import pytz
 import requests
 
 import PyPDF2
+import glob
+import logging
+
+# 在模块级别配置日志记录器
+logger = logging.getLogger("helper")
+logger.setLevel(logging.INFO)
+current_directory = os.path.dirname(os.path.abspath(__file__))
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36"
@@ -16,8 +23,8 @@ headers = {
 
 timezone = pytz.timezone('Asia/Shanghai')
 
-temp_folder = "./part"  # 临时文件夹，存每一页的文件，每次运行会自动创建和删除
-newspaper_saver_folder = './newspaper'  # 报纸保存位置，没有就自动创建
+temp_folder = f"{current_directory}/part"  # 临时文件夹，存每一页的文件，每次运行会自动创建和删除
+newspaper_saver_folder = f'{current_directory}/newspaper'  # 报纸保存位置，没有就自动创建
 
 
 def get_input_arg():
@@ -85,7 +92,8 @@ def date_is_before(date_str, standard_date_str):
 def init_or_clear_dir(dir):
     # 清空临时文件缓存
     if os.path.exists(dir):
-        print('清空临时文件')
+        # print('清空临时文件')
+        logger.info('清空临时文件')
         shutil.rmtree(dir)
         # 重建缓存目录
         os.makedirs(dir)
@@ -122,14 +130,17 @@ def check_web_newspaper_exist(remote_web_url):
         return True
 
     if response.status_code == 403:
-        print("您选择的日期太久远，网站不提供")
+        # print("您选择的日期太久远，网站不提供")
+        logger.info("您选择的日期太久远，网站不提供")
         return False
 
     if response.status_code == 404:
-        print("未找到指定日期的报纸，请尝试其他日期")
+        # print("未找到指定日期的报纸，请尝试其他日期")
+        logger.info("未找到指定日期的报纸，请尝试其他日期")
         return False
 
-    print("未找到指定日期的报纸，请尝试其他日期")
+    # print("未找到指定日期的报纸，请尝试其他日期")
+    logger.info("未找到指定日期的报纸，请尝试其他日期")
     return False
 
 
@@ -147,12 +158,14 @@ def download_file(file_url, save_folder):
         with open(os.path.join(save_folder, file_name), "wb") as fn:
             fn.write(file)
     except:
-        print("网络文件不存在，WebUrl:" + file_url)
+        # print("网络文件不存在，WebUrl:" + file_url)
+        logger.info("网络文件不存在，WebUrl:" + file_url)
 
 
 def merge_pdf(source_dir, filename_list, final_filename, target_dir):
     creat_folder_if_not_exist(target_dir)
-    print('合并{0}个PDF文件为单个PDF文件'.format(str(len(filename_list))))
+    logger.info('合并{0}个PDF文件为单个PDF文件'.format(str(len(filename_list))))
+    # print('合并{0}个PDF文件为单个PDF文件'.format(str(len(filename_list))))
 
     pdf_file_merger = PyPDF2.PdfMerger(strict=False)
 
@@ -165,4 +178,41 @@ def merge_pdf(source_dir, filename_list, final_filename, target_dir):
     pdf_file_merger.write(target_file_path)
     pdf_file_merger.close()
 
-    print("合并成功\n")
+    # print("合并成功\n")
+    logger.info("合并成功\n")
+
+
+def limt_pdf_files(folder_path, max_files=366):
+    """
+    从指定文件夹中删除最旧的PDF文件，直到文件数量小于或等于max_files。
+
+    参数:
+    folder_path (str): 包含PDF文件的文件夹路径。
+    max_files (int): 文件夹中允许保留的最大PDF文件数量。
+
+    返回:
+    None
+    """
+    # 获取指定文件夹下所有的PDF文件
+    pdf_files = glob.glob(os.path.join(folder_path, '*.pdf'))
+
+    # 如果PDF文件数量大于max_files
+    if len(pdf_files) > max_files:
+        # 按照修改时间对文件进行排序（最旧的在前）
+        pdf_files.sort(key=lambda f: os.path.getmtime(f))
+
+        # 计算需要删除的文件数量
+        num_to_delete = len(pdf_files) - max_files
+
+        # 从最旧的开始删除文件
+        for _ in range(num_to_delete):
+            file_to_delete = pdf_files.pop(0)  # 弹出并删除列表中的第一个元素
+            try:
+                os.remove(file_to_delete)
+                logger.info(f"已删除文件: {file_to_delete}")
+            except Exception as e:
+                logger.error(f"删除文件时出错: {file_to_delete}, 错误信息: {e}")
+
+    else:
+        logger.info(f"当前PDF文件数量 {len(pdf_files)} 个，限制 {max_files} 个。")
+
