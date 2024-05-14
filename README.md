@@ -5,6 +5,8 @@
 
   可实现下载人民日报电子版并将某一天的人民日报多页PDF合并为一整个PDF文件，方便阅览。
 
+  可指定下载日期
+
 ## 使用
 
 ### 需要Docker环境，能正常拉取github文件和docker镜像
@@ -26,9 +28,13 @@
    
     ```
    docker build -t peoples_daily_download .
-
-   docker run -d --name peoples_daily_download -v [宿主机要保存PDF的路径]:/app/newspaper peoples_daily_download >> /var/log/cron.log 2>&1
+    ```
+  运行
    ```
+   docker run -d --name peoples_daily_download -v [保存PDF的路径]:/app/newspaper peoples_daily_download >> /var/log/cron.log 2>&1
+   ```
+  查看日志
+  ```docker logs -f peoples_daily_download```
 
 #### 下载指定日期的人民日报
 
