@@ -15,10 +15,16 @@
 ```
 git clone https://github.com/RamenRa/The-Peoples-Daily-download-Docker.git && cd The-Peoples-Daily-download-Docker/
 ```
-现在你可以使用vi或者nano文本编辑器编辑crontab。用于自定义下载时间，默认07：30。官网04：00更新
 
-2. 构建镜像
-```
+
+2. 修改下载时间(可选操作) ，默认07：30 ，官网04：00更新
+   ```
+    echo "30 07 * * * root /usr/local/bin/python /app/peoples_daily_download.py >> /var/log/cron.log 2>&1" > crontab
+   ```
+
+3. 构建镜像
+   
+ ```
 docker build -t peoples_daily_download .
 
 docker run -d --name peoples_daily_download -v [宿主机要保存PDF的路径]:/app/newspaper peoples_daily_download
