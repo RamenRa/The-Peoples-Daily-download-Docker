@@ -38,7 +38,7 @@
    查看日志，Ctrl + c退出
    
     ```
- docker logs -f peoples_daily_download
+  docker logs -f peoples_daily_download
     ```
     
 
