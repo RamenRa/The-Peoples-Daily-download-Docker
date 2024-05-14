@@ -34,11 +34,10 @@
    ```
    docker run -d --name peoples_daily_download -v [保存PDF的路径]:/app/newspaper peoples_daily_download >> /var/log/cron.log 2>&1
    ```
-
    查看日志，Ctrl + c退出
    
     ```
-  docker logs -f peoples_daily_download
+    docker logs -f peoples_daily_download
     ```
     
 
