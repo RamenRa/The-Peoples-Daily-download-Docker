@@ -36,13 +36,15 @@
    ```
 
    查看日志，Ctrl + c退出
- ```
+   
+    ```
  docker logs -f peoples_daily_download
- ```
+    ```
+    
 
 #### 下载指定日期的人民日报
 
-   需要下载指定日期的人民日报，需要在脚本命令后面加上--date 参数，以下载指定日期的人民日报参数格式为yyyyMMdd，月日小于10时，需要前方0补位。
+ 需要下载指定日期的人民日报，需要在脚本命令后面加上--date 参数，以下载指定日期的人民日报参数格式为yyyyMMdd，月日小于10时，需要前方0补位。
 例如下载2022年9月1日的人民日报，执行如下命令：
    ```shell
    docker exec peoples_daily_download python /app/peoples_daily_download.py --date 20220901
