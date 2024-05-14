@@ -24,13 +24,14 @@
     echo "30 07 * * * root /usr/local/bin/python /app/peoples_daily_download.py > /var/log/cron.log 2>&1" > crontab
    ```
 
-3. 构建镜像
+3. 构建镜像并运行
+   构建镜像
    
     ```
    docker build -t peoples_daily_download .
     ```
     
-   运行
+   运行镜像
    ```
    docker run -d --name peoples_daily_download -v [保存PDF的路径]:/app/newspaper peoples_daily_download >> /var/log/cron.log 2>&1
    ```
