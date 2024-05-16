@@ -182,31 +182,30 @@ def merge_pdf(source_dir, filename_list, final_filename, target_dir):
     logger.info("合并成功\n")
 
 
-def limt_pdf_files(folder_path, max_files=366):
+def limit_pdf_files(folder_path, max_files=366):
     """
     从指定文件夹中删除最旧的PDF文件，直到文件数量小于或等于max_files。
-
+    
     参数:
     folder_path (str): 包含PDF文件的文件夹路径。
     max_files (int): 文件夹中允许保留的最大PDF文件数量。
-
+    
     返回:
     None
     """
     # 获取指定文件夹下所有的PDF文件
     pdf_files = glob.glob(os.path.join(folder_path, '*.pdf'))
-
+    
     # 如果PDF文件数量大于max_files
     if len(pdf_files) > max_files:
         # 按照修改时间对文件进行排序（最旧的在前）
-        pdf_files.sort(key=lambda f: os.path.getmtime(f))
-
-        # 计算需要删除的文件数量
-        num_to_delete = len(pdf_files) - max_files
-
-        # 从最旧的开始删除文件
-        for _ in range(num_to_delete):
-            file_to_delete = pdf_files.pop(0)  # 弹出并删除列表中的第一个元素
+        pdf_files.sort(key=os.path.getmtime)
+        
+        # 获取需要删除的文件列表
+        files_to_delete = pdf_files[:len(pdf_files) - max_files]
+        
+        # 删除文件
+        for file_to_delete in files_to_delete:
             try:
                 os.remove(file_to_delete)
                 logger.info(f"已删除文件: {file_to_delete}")
@@ -215,4 +214,3 @@ def limt_pdf_files(folder_path, max_files=366):
 
     else:
         logger.info(f"当前PDF文件数量 {len(pdf_files)} 个，限制 {max_files} 个。")
-
