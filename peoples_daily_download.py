@@ -57,7 +57,7 @@ def download_newspaper_by_date(date):
 
     if helper.check_local_newspaper_exist(helper.newspaper_saver_folder, newspaper_pdf_filename):
         # print("该日期已经下载过了! 每天早上07:30自动下载")
-        logger.info("该日期已经下载过了! 每天早上07:30自动下载")
+        logger.info("该日期已经下载过了! 默认每天早上07:30自动下载")
         return
 
     # 检测目标文件是否存在
