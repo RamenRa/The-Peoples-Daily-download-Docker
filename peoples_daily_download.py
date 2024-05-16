@@ -127,5 +127,5 @@ if __name__ == '__main__':
         # print("最新日期:" + date)
         logger.info("最新日期:" + date)
         download_newspaper_by_date(date)
-    helper.limt_pdf_files(helper.newspaper_saver_folder)
+    helper.limit_pdf_files(helper.newspaper_saver_folder)
 
