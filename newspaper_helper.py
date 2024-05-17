@@ -11,6 +11,8 @@ import requests
 import PyPDF2
 import glob
 import logging
+import warnings
+warnings.filterwarnings("ignore")
 
 # 在模块级别配置日志记录器
 logger = logging.getLogger("helper")
