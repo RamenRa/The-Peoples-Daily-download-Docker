@@ -167,7 +167,11 @@ def merge_pdf(source_dir, filename_list, final_filename, target_dir):
     logger.info('合并{0}个PDF文件为单个PDF文件'.format(str(len(filename_list))))
     # print('合并{0}个PDF文件为单个PDF文件'.format(str(len(filename_list))))
 
-    pdf_file_merger = PyPDF2.PdfMerger(strict=False)
+    # pdf_file_merger = PyPDF2.PdfMerger(strict=False)
+    try:
+        pdf_file_merger = PyPDF2.PdfFileMerger(strict=False)
+    except:
+        pdf_file_merger = PyPDF2.PdfMerger(strict=False)
 
     for file_name in filename_list:
         file_path = source_dir + '/' + file_name
