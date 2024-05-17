@@ -12,13 +12,10 @@ import PyPDF2
 import glob
 import logging
 
-import warnings
-
-warnings.filterwarnings("ignore")
 logging.basicConfig(  
     format="%(asctime)s %(levelname)s:%(name)s: %(message)s",  
     level=logging.INFO,  
-    datefmt="%Y-%m-%d %H:%M:%S",  # 添加了年、月、日  
+    datefmt="%Y-%m-%d %H:%M:%S",  
     stream=sys.stdout,  
 )  
 # 在模块级别配置日志记录器
