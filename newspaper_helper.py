@@ -13,9 +13,17 @@ import glob
 import logging
 
 
+logging.basicConfig(  
+    format="%(asctime)s %(levelname)s:%(name)s: %(message)s",  
+    level=logging.INFO,  
+    datefmt="%Y-%m-%d %H:%M:%S",  # 添加了年、月、日  
+    stream=sys.stdout,  
+)  
 # 在模块级别配置日志记录器
 logger = logging.getLogger("helper")
+
 logger.setLevel(logging.INFO)
+
 current_directory = os.path.dirname(os.path.abspath(__file__))
 
 headers = {
