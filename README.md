@@ -19,7 +19,7 @@
    ```
 
 
-2. 修改下载时间(可选操作) ，默认07：30 ，官网04：00更新
+2. 修改下载时间或 注释“peoples_daily_download.py”内最后一行代码解除pdf文件366个限制(可选操作) ，默认07：30运行 ，官网04：00更新
    ```
     echo "30 07 * * * root /usr/local/bin/python /app/peoples_daily_download.py > /var/log/cron.log 2>&1" > crontab
    ```
