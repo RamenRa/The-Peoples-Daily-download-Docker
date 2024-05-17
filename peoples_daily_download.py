@@ -10,12 +10,12 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-logging.basicConfig(
-    format="%(asctime)s %(levelname)s:%(name)s: %(message)s",
-    level=logging.INFO,
-    datefmt="%H:%M:%S",
-    stream=sys.stderr,
-)
+logging.basicConfig(  
+    format="%(asctime)s %(levelname)s:%(name)s: %(message)s",  
+    level=logging.INFO,  
+    datefmt="%Y-%m-%d %H:%M:%S",   
+    stream=sys.stderr,  
+)  
 logger = logging.getLogger("main")
 logging.getLogger("chardet.charsetprober").disabled = True
 
