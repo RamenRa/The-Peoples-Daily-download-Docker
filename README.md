@@ -1,5 +1,5 @@
 # The-Peoples-Daily-download
-[已构建的Docerk](https://hub.docker.com/r/ramen31/peoples_daily_download)
+[已构建的Docker](https://hub.docker.com/r/ramen31/peoples_daily_download)
 
 ## 简介
   人民日报电子版自动下载脚本
