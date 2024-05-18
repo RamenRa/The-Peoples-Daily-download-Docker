@@ -9,7 +9,7 @@ import newspaper_helper as helper
 
 logging.basicConfig(  
     format="%(asctime)s %(levelname)s:%(name)s: %(message)s",  
-    level=logging.ERROR,  
+    level=logging.INFO,  
     datefmt="%Y-%m-%d %H:%M:%S",   
     stream=sys.stdout,  
 )  
