@@ -77,7 +77,7 @@ def download_newspaper_by_date(date):
         # print(date + " 获取完成: " + newspaper_pdf_filename)
         logger.info(date + " 获取完成: " + newspaper_pdf_filename)
         # print("\n")
-        logger.info("\n")
+        # logger.info("\n")
     else:
         # print(date + "报纸不存在")
         logger.info(date + "报纸不存在")
