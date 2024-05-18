@@ -6,10 +6,12 @@ import requests
 import logging
 import sys
 import newspaper_helper as helper
+import warnings
+warnings.filterwarnings("ignore")
 
 logging.basicConfig(  
     format="%(asctime)s %(levelname)s:%(name)s: %(message)s",  
-    level=logging.INFO,  
+    level=logging.ERROR,  
     datefmt="%Y-%m-%d %H:%M:%S",   
     stream=sys.stdout,  
 )  
