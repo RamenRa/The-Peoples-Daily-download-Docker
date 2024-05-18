@@ -6,8 +6,6 @@ import requests
 import logging
 import sys
 import newspaper_helper as helper
-import warnings
-warnings.filterwarnings("ignore")
 
 logging.basicConfig(  
     format="%(asctime)s %(levelname)s:%(name)s: %(message)s",  
@@ -17,6 +15,7 @@ logging.basicConfig(
 )  
 logger = logging.getLogger("main")
 logging.getLogger("chardet.charsetprober").disabled = True
+logging.getLogger("PyPDF2").setLevel(logging.ERROR)
 
 def download_newspaper(newspaper_cover_url, newspaper_download_url_format, date, temp_folder):
     helper.init_or_clear_dir(temp_folder)
