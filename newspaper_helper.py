@@ -11,19 +11,16 @@ import sys
 import PyPDF2
 import glob
 import logging
-import warnings
-warnings.filterwarnings("ignore")
 
-logging.basicConfig(  
-    format="%(asctime)s %(levelname)s:%(name)s: %(message)s",  
-    level=logging.ERROR,  
-    datefmt="%Y-%m-%d %H:%M:%S",  
-    stream=sys.stdout,  
-)  
+logging.basicConfig(
+    format="%(asctime)s %(levelname)s:%(name)s: %(message)s",
+    level=logging.INFO, 
+    datefmt="%Y-%m-%d %H:%M:%S",
+    stream=sys.stdout,
+)
 # 在模块级别配置日志记录器
 logger = logging.getLogger("helper")
-
-logger.setLevel(logging.INFO)
+logging.getLogger("PyPDF2").setLevel(logging.ERROR)
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
 
