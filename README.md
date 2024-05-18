@@ -1,5 +1,5 @@
 # 关于人民日报自动下载的Dokcer项目
-[当前页面的Docker](https://hub.docker.com/r/ramen31/peoples_daily_download)
+[当前项目的Docker](https://hub.docker.com/r/ramen31/peoples_daily_download)
 
 ## 简介
   人民日报电子版自动下载脚本
