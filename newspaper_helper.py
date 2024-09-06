@@ -10,6 +10,7 @@ import requests
 import sys
 import PyPDF2
 import glob
+import time
 import logging
 
 logging.basicConfig(
@@ -127,27 +128,38 @@ def check_local_newspaper_exist(local_save_folder, newspaper_filename):
     return newspaper_filename in filename_list
 
 
-def check_web_newspaper_exist(remote_web_url):
+def check_web_newspaper_exist(remote_web_url, max_retries=3):
     # check web newspaper exist
 
     # print(remote_web_url)
-    response = requests.get(remote_web_url, headers=headers)
+    retries = 0
+    while retries < max_retries:
+        try:
+            response = requests.get(remote_web_url, headers=headers)
 
-    if response.status_code == 200:
-        return True
+            if response.status_code == 200:
+                return True
 
-    if response.status_code == 403:
-        # print("您选择的日期太久远，网站不提供")
-        logger.info("您选择的日期太久远，网站不提供")
-        return False
+            if response.status_code == 403:
+                logger.info("您选择的日期太久远，网站不提供")
+                return False
 
-    if response.status_code == 404:
-        # print("未找到指定日期的报纸，请尝试其他日期")
-        logger.info("未找到指定日期的报纸，请尝试其他日期")
-        return False
+            if response.status_code == 404:
+                logger.info("未找到指定日期的报纸，请尝试其他日期")
+                return False
 
-    # print("未找到指定日期的报纸，请尝试其他日期")
-    logger.info("未找到指定日期的报纸，请尝试其他日期")
+            logger.info("未找到指定日期的报纸，请尝试其他日期")
+            return False
+
+        except requests.exceptions.RequestException as e:
+            logger.error(f"请求失败: {e}, 正在尝试重试...")
+
+        retries += 1
+        if retries < max_retries:
+            logger.info(f"等待 1 小时后重试... (第 {retries+1} 次)")
+            time.sleep(3600)
+
+    logger.error("超过最大重试次数，操作失败")
     return False
 
 
