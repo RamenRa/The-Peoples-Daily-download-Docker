@@ -141,15 +141,15 @@ def check_web_newspaper_exist(remote_web_url, max_retries=3):
                 return True
 
             if response.status_code == 403:
-                logger.info("您选择的日期太久远，网站不提供")
+                logger.info("error 403:您选择的日期太久远，网站不提供")
                 return False
 
             if response.status_code == 404:
-                logger.info("未找到指定日期的报纸，请尝试其他日期")
-                return False
+                logger.info("error 404:未找到指定日期的报纸")
+                # return False
 
-            logger.info("未找到指定日期的报纸，请尝试其他日期")
-            return False
+            # logger.info("未找到指定日期的报纸，请尝试其他日期")
+            # return False
 
         except requests.exceptions.RequestException as e:
             logger.error(f"请求失败: {e}, 正在尝试重试...")
@@ -159,7 +159,7 @@ def check_web_newspaper_exist(remote_web_url, max_retries=3):
             logger.info(f"等待 1 小时后重试... (第 {retries+1} 次)")
             time.sleep(3600)
 
-    logger.error("超过最大重试次数，操作失败")
+    logger.error("超过最大重试次数，下载失败")
     return False
 
 
